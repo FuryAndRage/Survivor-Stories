@@ -40,7 +40,6 @@ class Player():
 	def move(self):
 		if keyPressed("left"):
 			self.pos_x -= self.speed
-			
 			transformSprite(self.sprite,180,0.3)
 			if clock() > self.timeOfNextFrame:
 				self.frame += 1
@@ -62,10 +61,8 @@ class Player():
 		else:
 			self.xdir = 0
 
-
 		if keyPressed("up"):
 			self.pos_y -= self.speed
-			
 			transformSprite(self.sprite,-90,0.3)
 			if clock() > self.timeOfNextFrame:
 				self.frame += 1
@@ -76,7 +73,6 @@ class Player():
 				self.ydir = -1
 		elif keyPressed("down"):
 			self.pos_y +=self.speed
-			
 			transformSprite(self.sprite,90,0.3)
 			if clock() > self.timeOfNextFrame:
 				self.frame +=1
