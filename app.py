@@ -1,6 +1,7 @@
 from pygame_functions import *
 setAutoUpdate(False)
 screenSize(800, 800)
+#setBackgroundImage('bg5.jpg')
 class Player():
 	def __init__(self):
 		self.pos_x = 400
@@ -34,18 +35,39 @@ class Player():
 		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_18.png' )
 		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_19.png' )
 		showSprite(self.sprite)
-
+		
 		self.footstep = makeSound('sounds/foot.ogg')
-
+		self.feet = makeSprite('survivor/feet/walk/survivor-walk_0.png')
+		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_1.png')
+		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_2.png')
+		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_3.png')
+		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_4.png')
+		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_5.png')
+		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_6.png')
+		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_7.png')
+		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_8.png')
+		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_9.png')
+		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_10.png')
+		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_11.png')
+		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_12.png')
+		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_13.png')
+		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_14.png')
+		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_15.png')
+		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_16.png')
+		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_17.png')
+		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_18.png')
+		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_19.png')
 	def move(self):
 		if keyPressed("left"):
 			self.pos_x -= self.speed
 			transformSprite(self.sprite,180,0.3)
+			transformSprite(self.feet,180,1)
 			if clock() > self.timeOfNextFrame:
 				self.frame += 1
 				if self.frame >19:
 					self.frame = 0
 				changeSpriteImage(self.sprite, self.frame)
+				changeSpriteImage(self.feet,self.frame)
 				self.timeOfNextFrame = clock() + 15
 				self.xdir = -1
 		elif keyPressed("right"):
@@ -85,6 +107,7 @@ class Player():
 			self.ydir = 0
 
 		moveSprite(self.sprite, self.pos_x, self.pos_y)
+		moveSprite(self.feet, self.pos_x, self.pos_y)
 
 	def update(self):
 		self.move()
