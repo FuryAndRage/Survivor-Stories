@@ -1,6 +1,10 @@
 from pygame_functions import *
+import time
+
 setAutoUpdate(False)
-screenSize(800, 800)
+WIDTH = 1000
+HEIGHT = 800
+screenSize(WIDTH, HEIGHT)
 #setBackgroundImage('bg5.jpg')
 class Player():
 	def __init__(self):
@@ -13,31 +17,12 @@ class Player():
 		self.frame = 0
 		self.timeOfNextFrame = clock()
 		self.current_weapon = 0
-		self.sprite = makeSprite('survivor/knife/move/survivor-move_knife_0.png' )
-		transformSprite(self.sprite,180,0.3)
-		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_1.png' )
-		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_2.png' )
-		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_3.png' )
-		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_4.png' )
-		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_5.png' )
-		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_6.png' )
-		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_7.png' )
-		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_8.png' )
-		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_9.png' )
-		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_10.png' )
-		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_11.png' )
-		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_12.png' )
-		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_13.png' )
-		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_14.png' )
-		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_15.png' )
-		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_16.png' )
-		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_17.png' )
-		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_18.png' )
-		addSpriteImage(self.sprite,'survivor/knife/move/survivor-move_knife_19.png' )
-		showSprite(self.sprite)
-		
+		self.walking = False
+
 		self.footstep = makeSound('sounds/foot.ogg')
+
 		self.feet = makeSprite('survivor/feet/walk/survivor-walk_0.png')
+		transformSprite(self.feet,180,0.3)
 		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_1.png')
 		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_2.png')
 		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_3.png')
@@ -57,57 +42,136 @@ class Player():
 		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_17.png')
 		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_18.png')
 		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_19.png')
+		showSprite(self.feet)
+
+		self.sprite_knife = makeSprite('survivor/knife/move/survivor-move_knife_0.png' )
+		transformSprite(self.sprite_knife,180,0.3)
+		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_1.png' )
+		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_2.png' )
+		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_3.png' )
+		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_4.png' )
+		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_5.png' )
+		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_6.png' )
+		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_7.png' )
+		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_8.png' )
+		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_9.png' )
+		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_10.png' )
+		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_11.png' )
+		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_12.png' )
+		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_13.png' )
+		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_14.png' )
+		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_15.png' )
+		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_16.png' )
+		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_17.png' )
+		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_18.png' )
+		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_19.png' )
+		showSprite(self.sprite_knife)
+		
+		self.sprite_knife_attack = makeSprite('survivor/knife/move/survivor-move_knife_0.png')
+		transformSprite(self.sprite_knife_attack,180,0.3)
+		addSpriteImage(self.sprite_knife_attack, 'survivor/knife/meleeattack/survivor-meleeattack_knife_0.png')
+		addSpriteImage(self.sprite_knife_attack, 'survivor/knife/meleeattack/survivor-meleeattack_knife_1.png')
+		addSpriteImage(self.sprite_knife_attack, 'survivor/knife/meleeattack/survivor-meleeattack_knife_2.png')
+		addSpriteImage(self.sprite_knife_attack, 'survivor/knife/meleeattack/survivor-meleeattack_knife_3.png')
+		addSpriteImage(self.sprite_knife_attack, 'survivor/knife/meleeattack/survivor-meleeattack_knife_4.png')
+		addSpriteImage(self.sprite_knife_attack, 'survivor/knife/meleeattack/survivor-meleeattack_knife_5.png')
+		addSpriteImage(self.sprite_knife_attack, 'survivor/knife/meleeattack/survivor-meleeattack_knife_6.png')
+		addSpriteImage(self.sprite_knife_attack, 'survivor/knife/meleeattack/survivor-meleeattack_knife_7.png')
+		addSpriteImage(self.sprite_knife_attack, 'survivor/knife/meleeattack/survivor-meleeattack_knife_9.png')
+		addSpriteImage(self.sprite_knife_attack, 'survivor/knife/meleeattack/survivor-meleeattack_knife_10.png')
+		addSpriteImage(self.sprite_knife_attack, 'survivor/knife/meleeattack/survivor-meleeattack_knife_11.png')
+		addSpriteImage(self.sprite_knife_attack, 'survivor/knife/meleeattack/survivor-meleeattack_knife_12.png')
+		addSpriteImage(self.sprite_knife_attack, 'survivor/knife/meleeattack/survivor-meleeattack_knife_13.png')
+		addSpriteImage(self.sprite_knife_attack, 'survivor/knife/meleeattack/survivor-meleeattack_knife_14.png')
+		
+
+
+		
+	
 	def move(self):
-		if keyPressed("left"):
+		if keyPressed("a"):
+			self.walking = True
 			self.pos_x -= self.speed
-			transformSprite(self.sprite,180,0.3)
-			transformSprite(self.feet,180,1)
+			transformSprite(self.feet,180,0.3)
+			transformSprite(self.sprite_knife,180,0.3)
+			
 			if clock() > self.timeOfNextFrame:
 				self.frame += 1
 				if self.frame >19:
 					self.frame = 0
-				changeSpriteImage(self.sprite, self.frame)
+				changeSpriteImage(self.sprite_knife, self.frame)
 				changeSpriteImage(self.feet,self.frame)
 				self.timeOfNextFrame = clock() + 15
 				self.xdir = -1
-		elif keyPressed("right"):
+
+		elif keyPressed("d"):
+			self.walking = True
 			self.pos_x += self.speed
-			
-			transformSprite(self.sprite,0,0.3)
+			transformSprite(self.feet,0,0.3)
+			transformSprite(self.sprite_knife,0,0.3)
 			if clock() > self.timeOfNextFrame:
 				self.frame += 1
 				if self.frame > 19:
 					self.frame = 0
-				changeSpriteImage(self.sprite, self.frame)
+				changeSpriteImage(self.feet,self.frame)
+				changeSpriteImage(self.sprite_knife, self.frame)
 				self.xdir = 1
 		else:
 			self.xdir = 0
+			self.walking = False
 
-		if keyPressed("up"):
+		if keyPressed("w"):
+			self.walking = True
 			self.pos_y -= self.speed
-			transformSprite(self.sprite,-90,0.3)
+			transformSprite(self.feet,-90,0.3)
+			transformSprite(self.sprite_knife,-90,0.3)
 			if clock() > self.timeOfNextFrame:
 				self.frame += 1
 				if self.frame > 19:
 					self.frame = 0
-				changeSpriteImage(self.sprite, self.frame)
+				changeSpriteImage(self.feet,self.frame)
+				changeSpriteImage(self.sprite_knife, self.frame)
 				self.timeOfNextFrame = clock() + 15
 				self.ydir = -1
-		elif keyPressed("down"):
+		elif keyPressed("s"):
+			self.walking = True
 			self.pos_y +=self.speed
-			transformSprite(self.sprite,90,0.3)
+			transformSprite(self.feet,90,0.3)
+			transformSprite(self.sprite_knife,90,0.3)
 			if clock() > self.timeOfNextFrame:
 				self.frame +=1
 				if self.frame > 19:
 					self.frame = 0
-				changeSpriteImage(self.sprite, self.frame)
+				changeSpriteImage(self.feet,self.frame)
+				changeSpriteImage(self.sprite_knife, self.frame)
 				self.timeOfNextFrame = clock() + 15
 				self.ydir = 1
 		else:
 			self.ydir = 0
-
-		moveSprite(self.sprite, self.pos_x, self.pos_y)
+			self.walking = False
+		moveSprite(self.sprite_knife, self.pos_x, self.pos_y)
 		moveSprite(self.feet, self.pos_x, self.pos_y)
+
+
+		if keyPressed('space'):
+			showSprite(self.sprite_knife_attack)
+			if clock() > self.timeOfNextFrame:
+				self.frame += 1
+				if self.frame >14:
+					self.frame = 0
+				changeSpriteImage(self.sprite_knife_attack, self.frame)
+
+		else:
+			changeSpriteImage(self.sprite_knife_attack, 0)
+
+		if self.walking:
+			playSound(self.footstep, 1)
+		else:
+			stopSound(self.footstep)
+
+
+	def attack(self):
+		pass
 
 	def update(self):
 		self.move()
