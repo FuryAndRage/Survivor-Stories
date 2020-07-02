@@ -6,10 +6,13 @@ WIDTH = 1000
 HEIGHT = 800
 screenSize(WIDTH, HEIGHT)
 #setBackgroundImage('bg5.jpg')
+
 class Player():
 	def __init__(self):
 		self.pos_x = 400
 		self.pos_y = 400
+		self.feet_pos_y = 400
+		self.feet_pos_x = 400
 		self.speed = 3
 		self.health = 100
 		self.xdir = 0
@@ -18,11 +21,13 @@ class Player():
 		self.timeOfNextFrame = clock()
 		self.current_weapon = 0
 		self.walking = False
+		self.direction = 0
 
 		self.footstep = makeSound('sounds/foot.ogg')
 
 		self.feet = makeSprite('survivor/feet/walk/survivor-walk_0.png')
 		transformSprite(self.feet,180,0.3)
+
 		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_1.png')
 		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_2.png')
 		addSpriteImage(self.feet, 'survivor/feet/walk/survivor-walk_3.png')
@@ -66,7 +71,7 @@ class Player():
 		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_18.png' )
 		addSpriteImage(self.sprite_knife,'survivor/knife/move/survivor-move_knife_19.png' )
 		showSprite(self.sprite_knife)
-		
+
 		self.sprite_knife_attack = makeSprite('survivor/knife/move/survivor-move_knife_0.png')
 		transformSprite(self.sprite_knife_attack,180,0.3)
 		addSpriteImage(self.sprite_knife_attack, 'survivor/knife/meleeattack/survivor-meleeattack_knife_0.png')
@@ -85,14 +90,74 @@ class Player():
 		addSpriteImage(self.sprite_knife_attack, 'survivor/knife/meleeattack/survivor-meleeattack_knife_14.png')
 		
 
+	def move_feet(self):
+		if keyPressed("a"):
 
+			self.feet_pos_x = self.pos_x - 20
+			transformSprite(self.feet,180,0.3)
+			
+			if clock() > self.timeOfNextFrame:
+				self.frame += 1
+				if self.frame >19:
+					self.frame = 0
+				
+				changeSpriteImage(self.feet,self.frame)
+				
+				self.xdir = -1
+
+		elif keyPressed("d"):	
+			self.walking = True
+			self.feet_pos_x = self.pos_x + 20
+			transformSprite(self.feet,0,0.3)
+			
+			if clock() > self.timeOfNextFrame:
+				self.frame += 1
+				if self.frame > 19:
+					self.frame = 0
+				changeSpriteImage(self.feet,self.frame)
+				
+				self.xdir = 1
+		else:
+			self.xdir = 0
+			self.walking = False
+
+		if keyPressed("w"):
+			self.walking = True
+			self.feet_pos_y = self.pos_y + 20
+			transformSprite(self.feet,-90,0.3)
+			
+			if clock() > self.timeOfNextFrame:
+				self.frame += 1
+				if self.frame > 19:
+					self.frame = 0
+				changeSpriteImage(self.feet,self.frame)
+				
+				self.timeOfNextFrame = clock() + 15
+				self.ydir = 1
+		elif keyPressed("s"):
+			self.walking = True
+			self.pos_y +=self.speed
+			transformSprite(self.feet,90,0.3)
+			
+			if clock() > self.timeOfNextFrame:
+				self.frame +=1
+				if self.frame > 19:
+					self.frame = 0
+				changeSpriteImage(self.feet,self.frame)
+				
+				self.timeOfNextFrame = clock() + 15
+				self.ydir = 1
+		else:
+			self.ydir = 0
+			self.walking = False
 		
-	
+		moveSprite(self.feet, self.pos_x, self.pos_y)
+
 	def move(self):
 		if keyPressed("a"):
 			self.walking = True
 			self.pos_x -= self.speed
-			transformSprite(self.feet,180,0.3)
+			
 			transformSprite(self.sprite_knife,180,0.3)
 			
 			if clock() > self.timeOfNextFrame:
@@ -100,14 +165,14 @@ class Player():
 				if self.frame >19:
 					self.frame = 0
 				changeSpriteImage(self.sprite_knife, self.frame)
-				changeSpriteImage(self.feet,self.frame)
+				
 				self.timeOfNextFrame = clock() + 15
 				self.xdir = -1
 
 		elif keyPressed("d"):
 			self.walking = True
 			self.pos_x += self.speed
-			transformSprite(self.feet,0,0.3)
+			
 			transformSprite(self.sprite_knife,0,0.3)
 			if clock() > self.timeOfNextFrame:
 				self.frame += 1
@@ -123,26 +188,25 @@ class Player():
 		if keyPressed("w"):
 			self.walking = True
 			self.pos_y -= self.speed
-			transformSprite(self.feet,-90,0.3)
+			
 			transformSprite(self.sprite_knife,-90,0.3)
 			if clock() > self.timeOfNextFrame:
 				self.frame += 1
 				if self.frame > 19:
 					self.frame = 0
-				changeSpriteImage(self.feet,self.frame)
+				
 				changeSpriteImage(self.sprite_knife, self.frame)
 				self.timeOfNextFrame = clock() + 15
-				self.ydir = -1
 		elif keyPressed("s"):
 			self.walking = True
 			self.pos_y +=self.speed
-			transformSprite(self.feet,90,0.3)
+			
 			transformSprite(self.sprite_knife,90,0.3)
 			if clock() > self.timeOfNextFrame:
 				self.frame +=1
 				if self.frame > 19:
 					self.frame = 0
-				changeSpriteImage(self.feet,self.frame)
+				
 				changeSpriteImage(self.sprite_knife, self.frame)
 				self.timeOfNextFrame = clock() + 15
 				self.ydir = 1
@@ -150,7 +214,7 @@ class Player():
 			self.ydir = 0
 			self.walking = False
 		moveSprite(self.sprite_knife, self.pos_x, self.pos_y)
-		moveSprite(self.feet, self.pos_x, self.pos_y)
+		
 
 
 		if keyPressed('space'):
@@ -159,6 +223,7 @@ class Player():
 				self.frame += 1
 				if self.frame >14:
 					self.frame = 0
+
 				changeSpriteImage(self.sprite_knife_attack, self.frame)
 
 		else:
@@ -175,6 +240,7 @@ class Player():
 
 	def update(self):
 		self.move()
+		self.move_feet()
 
 
 player = Player()
